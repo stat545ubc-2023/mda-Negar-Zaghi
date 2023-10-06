@@ -1,9 +1,10 @@
 ---
-title: "Mini Data-Analysis Deliverable 1"
-output: html_document
+title: "Mini Data-Analysis Deliverable 1 - Negar Zaghi"
+output: md_document
 ---
 
 # Welcome to your (maybe) first-ever data analysis project!
+# testing git
 
 And hopefully the first of many. Let's get started:
 
@@ -84,10 +85,10 @@ And that is exactly the first thing that you will do!
 
 <!-------------------------- Start your work below ---------------------------->
 
-1: CHOICE_1\_HERE\
-2: CHOICE_2\_HERE\
-3: CHOICE_3\_HERE\
-4: CHOICE_4\_HERE
+1: apt_buildings\
+2: parking_meters\
+3: steam_games\
+4: vancouver_trees
 
 <!----------------------------------------------------------------------------->
 
@@ -98,8 +99,35 @@ And that is exactly the first thing that you will do!
 <!-------------------------- Start your work below ---------------------------->
 
 ```{r}
-### EXPLORE HERE ###
+### EXPLORING apt_buildings ###
+apt_buildings
+class(apt_buildings)
+dim(apt_buildings)
+glimpse(apt_buildings)
+```
+
+```{r}
+### EXPLORING parking_meters ###
+parking_meters
+class(parking_meters)
+dim(parking_meters)
+glimpse(parking_meters)
+```
+
+```{r}
+### EXPLORING steam_games ###
 steam_games
+class(steam_games)
+dim(steam_games)
+glimpse(steam_games)
+```
+
+```{r}
+### EXPLORING vancouver_trees ###
+vancouver_trees
+class(vancouver_trees)
+dim(vancouver_trees)
+glimpse(vancouver_trees)
 ```
 
 <!----------------------------------------------------------------------------->
@@ -108,11 +136,15 @@ steam_games
 
 <!-------------------------- Start your work below ---------------------------->
 
+_I will choose vancouver_trees because I am interested to learn more about them._
+
 <!----------------------------------------------------------------------------->
 
 1.4 **(2 points)** Time for a  final decision! Going back to the beginning, it's important to have an *end goal* in mind. For example, if I had chosen the `titanic` dataset for my project, I might've wanted to explore the relationship between survival and other variables. Try to think of 1 research question that you would want to answer with your dataset. Note it down below.
 
 <!-------------------------- Start your work below ---------------------------->
+
+_I want to explore a map of what types of trees are in which areas of Vancouver..._
 
 <!----------------------------------------------------------------------------->
 
@@ -130,18 +162,78 @@ If we rewind and go back to the learning objectives, you'll see that by the end 
 
 Make sure that you're using dplyr and ggplot2 rather than base R for this task. Outside of this project, you may find that you prefer using base R functions for certain tasks, and that's just fine! But part of this project is for you to practice the tools we learned in class, which is dplyr and ggplot2.
 
-1.  Plot the distribution of a numeric variable.
-2.  Create a new variable based on other variables in your data (only if it makes sense)
+*1.  Plot the distribution of a numeric variable.*
+*2.  Create a new variable based on other variables in your data (only if it makes sense)*
 3.  Investigate how many missing values there are per variable. Can you find a way to plot this?
-4.  Explore the relationship between 2 variables in a plot.
+*4.  Explore the relationship between 2 variables in a plot.*
 5.  Filter observations in your data according to your own criteria. Think of what you'd like to explore - again, if this was the `titanic` dataset, I may want to narrow my search down to passengers born in a particular year...
 6.  Use a boxplot to look at the frequency of different observations within a single variable. You can do this for more than one variable if you wish!
-7.  Make a new tibble with a subset of your data, with variables and observations that you are interested in exploring.
+*7.  Make a new tibble with a subset of your data, with variables and observations that you are interested in exploring.*
 8.  Use a density plot to explore any of your variables (that are suitable for this type of plot).
 
 2.2 **(4 points)** For each of the 4 exercises that you complete, provide a *brief explanation* of why you chose that exercise in relation to your data (in other words, why does it make sense to do that?), and sufficient comments for a reader to understand your reasoning and code.
 
 <!-------------------------- Start your work below ---------------------------->
+
+## 2) Creating a new variable and 7) Making a new tibble with subset of data
+_Here, a new variable is added, age of trees in years._
+_This utilizes the date planted and subtracts it by today's date and converts that value (in days) to years_
+_A new tibble is created with only some columns of interest_
+
+```{r}
+today = Sys.Date() #gets today's date
+
+vancouver_trees_age <- vancouver_trees %>%
+    mutate(age_yrs = (today - date_planted)/365) %>% #converts date planted to age in years
+    select(genus_name,common_name,height_range_id,diameter,date_planted,age_yrs) #selects only specific columns
+
+print(vancouver_trees_age)
+
+```
+
+
+## 4) Relationship between 2 variables
+_Here, we explore the relationship between the  age of tree and the diameter_
+_We see that there is not a significant relationship_
+```{r}
+age_vs_diameter <- ggplot(vancouver_trees_age, aes(age_yrs, diameter)) +
+  geom_point(size = 0.5,
+             alpha = 0.7)
+
+print(age_vs_diameter)
+```
+
+## 4) Mapping
+_Here, we are mapping the trees based on latitude and longitude_
+_Using colour, we can see the height ranges and whether the tree is by a curb or not_
+```{r}
+tree_location <- ggplot(vancouver_trees, aes(latitude, longitude)) +
+  geom_point(aes(color = height_range_id), #colour by height range ID
+             size = 0.1,
+             alpha = 0.2) 
+
+print(tree_location)
+
+
+location_curb <- ggplot(vancouver_trees, aes(latitude, longitude)) +
+  geom_point(aes(color = curb), #colour by curb, Yes or No
+             size = 0.1,
+             alpha = 0.8) 
+
+print(location_curb)
+
+```
+
+## 1) Distribution between height ID and diameter
+_This plot uses a jitter plot to show the distribution of tree diameter for each height range ID_
+```{r}
+height_diam <- ggplot(vancouver_trees, aes(height_range_id, diameter)) +
+    geom_jitter(width = 0.2, alpha = 0.5)
+
+print(height_diam)
+
+```
+
 
 <!----------------------------------------------------------------------------->
 
@@ -150,6 +242,14 @@ Make sure that you're using dplyr and ggplot2 rather than base R for this task. 
 **(4 points)** So far, you have chosen a dataset and gotten familiar with it through exploring the data. You have also brainstormed one research question that interested you (Task 1.4).  Now it's time to pick 4 research questions that you would like to explore in Milestone 2! Write the 4 questions and any additional comments below. 
 
 <!--- *****START HERE***** --->
+
+Research Question 1: For each genus, what common names of trees are found in Vancouver?
+
+Research Question 2: Is there a relationship between the height of trees and the age of trees? What about the diameter of tree against the age of trees?
+
+Research Question 3: Where are the different type of tree located in Vancouver? Is there a trend between location of tree planted and type of tree?
+
+Research Question 4: Is there a relationship between the height of trees and the diameter of trees
 
 <!----------------------------->
 
