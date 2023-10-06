@@ -1,10 +1,11 @@
 ---
 title: "Mini Data-Analysis Deliverable 1 - Negar Zaghi"
-output: md_document
+output: 
+  md_document:
+    variant: markdown_github
 ---
 
 # Welcome to your (maybe) first-ever data analysis project!
-# testing git
 
 And hopefully the first of many. Let's get started:
 
