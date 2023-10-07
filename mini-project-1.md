@@ -12,10 +12,10 @@ And hopefully the first of many. Let’s get started:
 
 1.  Load the packages below.
 
-``` r
-library(datateachr)
-library(tidyverse)
-```
+<!-- -->
+
+    library(datateachr)
+    library(tidyverse)
 
     ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
     ## ✔ dplyr     1.1.3     ✔ readr     2.1.4
@@ -90,27 +90,27 @@ The `datateachr` package by Hayley Boyce and Jordan Bourak currently
 composed of 7 semi-tidy datasets for educational purposes. Here is a
 brief description of each dataset:
 
--   *apt_buildings*: Acquired courtesy of The City of Toronto’s Open
+-   *apt\_buildings*: Acquired courtesy of The City of Toronto’s Open
     Data Portal. It currently has 3455 rows and 37 columns.
 
--   *building_permits*: Acquired courtesy of The City of Vancouver’s
+-   *building\_permits*: Acquired courtesy of The City of Vancouver’s
     Open Data Portal. It currently has 20680 rows and 14 columns.
 
--   *cancer_sample*: Acquired courtesy of UCI Machine Learning
+-   *cancer\_sample*: Acquired courtesy of UCI Machine Learning
     Repository. It currently has 569 rows and 32 columns.
 
--   *flow_sample*: Acquired courtesy of The Government of Canada’s
+-   *flow\_sample*: Acquired courtesy of The Government of Canada’s
     Historical Hydrometric Database. It currently has 218 rows and 7
     columns.
 
--   *parking_meters*: Acquired courtesy of The City of Vancouver’s Open
+-   *parking\_meters*: Acquired courtesy of The City of Vancouver’s Open
     Data Portal. It currently has 10032 rows and 22 columns.
 
--   *steam_games*: Acquired courtesy of Kaggle. It currently has 40833
+-   *steam\_games*: Acquired courtesy of Kaggle. It currently has 40833
     rows and 21 columns.
 
--   *vancouver_trees*: Acquired courtesy of The City of Vancouver’s Open
-    Data Portal. It currently has 146611 rows and 20 columns.
+-   *vancouver\_trees*: Acquired courtesy of The City of Vancouver’s
+    Open Data Portal. It currently has 146611 rows and 20 columns.
 
 **Things to keep in mind**
 
@@ -142,10 +142,10 @@ understand your data.
 
 <!-------------------------- Start your work below ---------------------------->
 
-1: apt_buildings  
-2: parking_meters  
-3: steam_games  
-4: vancouver_trees
+1: apt\_buildings  
+2: parking\_meters  
+3: steam\_games  
+4: vancouver\_trees
 
 <!----------------------------------------------------------------------------->
 
@@ -162,10 +162,8 @@ comments outside of the code chunk?
 
 <!-------------------------- Start your work below ---------------------------->
 
-``` r
-### EXPLORING apt_buildings ###
-apt_buildings
-```
+    ### EXPLORING apt_buildings ###
+    apt_buildings
 
     ## # A tibble: 3,455 × 37
     ##       id air_conditioning amenities             balconies barrier_free_accessi…¹
@@ -188,21 +186,15 @@ apt_buildings
     ## #   parking_type <chr>, pets_allowed <chr>, prop_management_company_name <chr>,
     ## #   property_type <chr>, rsn <dbl>, separate_gas_meters <chr>, …
 
-``` r
-class(apt_buildings)
-```
+    class(apt_buildings)
 
     ## [1] "tbl_df"     "tbl"        "data.frame"
 
-``` r
-dim(apt_buildings)
-```
+    dim(apt_buildings)
 
     ## [1] 3455   37
 
-``` r
-glimpse(apt_buildings)
-```
+    glimpse(apt_buildings)
 
     ## Rows: 3,455
     ## Columns: 37
@@ -244,10 +236,8 @@ glimpse(apt_buildings)
     ## $ cooling_room                     <chr> "NO", "NO", "NO", "NO", "NO", "NO", "…
     ## $ no_barrier_free_accessible_units <dbl> 2, 0, 0, 42, 0, NA, 14, 0, 0, 1, 25, …
 
-``` r
-### EXPLORING parking_meters ###
-parking_meters
-```
+    ### EXPLORING parking_meters ###
+    parking_meters
 
     ## # A tibble: 10,032 × 22
     ##    meter_head  r_mf_9a_6p r_mf_6p_10 r_sa_9a_6p r_sa_6p_10 r_su_9a_6p r_su_6p_10
@@ -268,21 +258,15 @@ parking_meters
     ## #   t_su_6p_10 <chr>, time_misc <chr>, credit_card <chr>, pay_phone <chr>,
     ## #   longitude <dbl>, latitude <dbl>, geo_local_area <chr>, meter_id <chr>
 
-``` r
-class(parking_meters)
-```
+    class(parking_meters)
 
     ## [1] "tbl_df"     "tbl"        "data.frame"
 
-``` r
-dim(parking_meters)
-```
+    dim(parking_meters)
 
     ## [1] 10032    22
 
-``` r
-glimpse(parking_meters)
-```
+    glimpse(parking_meters)
 
     ## Rows: 10,032
     ## Columns: 22
@@ -309,10 +293,8 @@ glimpse(parking_meters)
     ## $ geo_local_area <chr> "West End", "Strathcona", "Riley Park", "West Point Gre…
     ## $ meter_id       <chr> "670805", "471405", "C80145", "D03704", "301023", "5913…
 
-``` r
-### EXPLORING steam_games ###
-steam_games
-```
+    ### EXPLORING steam_games ###
+    steam_games
 
     ## # A tibble: 40,833 × 21
     ##       id url    types name  desc_snippet recent_reviews all_reviews release_date
@@ -333,21 +315,15 @@ steam_games
     ## #   game_description <chr>, mature_content <chr>, minimum_requirements <chr>,
     ## #   recommended_requirements <chr>, original_price <dbl>, discount_price <dbl>
 
-``` r
-class(steam_games)
-```
+    class(steam_games)
 
     ## [1] "spec_tbl_df" "tbl_df"      "tbl"         "data.frame"
 
-``` r
-dim(steam_games)
-```
+    dim(steam_games)
 
     ## [1] 40833    21
 
-``` r
-glimpse(steam_games)
-```
+    glimpse(steam_games)
 
     ## Rows: 40,833
     ## Columns: 21
@@ -373,10 +349,8 @@ glimpse(steam_games)
     ## $ original_price           <dbl> 19.99, 29.99, 39.99, 44.99, 0.00, NA, 59.99, …
     ## $ discount_price           <dbl> 14.99, NA, NA, NA, NA, 35.18, 70.42, 17.58, N…
 
-``` r
-### EXPLORING vancouver_trees ###
-vancouver_trees
-```
+    ### EXPLORING vancouver_trees ###
+    vancouver_trees
 
     ## # A tibble: 146,611 × 20
     ##    tree_id civic_number std_street    genus_name species_name cultivar_name  
@@ -398,21 +372,15 @@ vancouver_trees
     ## #   diameter <dbl>, curb <chr>, date_planted <date>, longitude <dbl>,
     ## #   latitude <dbl>
 
-``` r
-class(vancouver_trees)
-```
+    class(vancouver_trees)
 
     ## [1] "tbl_df"     "tbl"        "data.frame"
 
-``` r
-dim(vancouver_trees)
-```
+    dim(vancouver_trees)
 
     ## [1] 146611     20
 
-``` r
-glimpse(vancouver_trees)
-```
+    glimpse(vancouver_trees)
 
     ## Rows: 146,611
     ## Columns: 20
@@ -445,7 +413,7 @@ to choose this one? Briefly explain your choice below.
 
 <!-------------------------- Start your work below ---------------------------->
 
-*I will choose vancouver_trees because I am interested to learn more
+*I will choose vancouver\_trees because I am interested to learn more
 about them.*
 
 <!----------------------------------------------------------------------------->
@@ -531,15 +499,13 @@ the date planted and subtracts it by today’s date and converts that
 value (in days) to years* *A new tibble is created with only some
 columns of interest*
 
-``` r
-today = Sys.Date() #gets today's date
+    today = Sys.Date() #gets today's date
 
-vancouver_trees_age <- vancouver_trees %>%
-    mutate(age_yrs = (today - date_planted)/365) %>% #converts date planted to age in years
-    select(genus_name,common_name,height_range_id,diameter,date_planted,age_yrs) #selects only specific columns
+    vancouver_trees_age <- vancouver_trees %>%
+        mutate(age_yrs = (today - date_planted)/365) %>% #converts date planted to age in years
+        select(genus_name,common_name,height_range_id,diameter,date_planted,age_yrs) #selects only specific columns
 
-print(vancouver_trees_age)
-```
+    print(vancouver_trees_age)
 
     ## # A tibble: 146,611 × 6
     ##    genus_name common_name          height_range_id diameter date_planted age_yrs
@@ -561,20 +527,18 @@ print(vancouver_trees_age)
 *Here, we explore the relationship between the age of tree and the
 diameter* *We see that there is not a significant relationship*
 
-``` r
-age_vs_diameter <- ggplot(vancouver_trees_age, aes(age_yrs, diameter)) +
-  geom_point(size = 0.5,
-             alpha = 0.7)
+    age_vs_diameter <- ggplot(vancouver_trees_age, aes(age_yrs, diameter)) +
+      geom_point(size = 0.5,
+                 alpha = 0.7)
 
-print(age_vs_diameter)
-```
+    print(age_vs_diameter)
 
     ## Don't know how to automatically pick scale for object of type <difftime>.
     ## Defaulting to continuous.
 
     ## Warning: Removed 76548 rows containing missing values (`geom_point()`).
 
-![](mini-project-1_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](mini-project-1_files/figure-markdown_strict/unnamed-chunk-7-1.png)
 
 ## 4) Mapping
 
@@ -582,45 +546,39 @@ print(age_vs_diameter)
 colour, we can see the height ranges and whether the tree is by a curb
 or not*
 
-``` r
-tree_location <- ggplot(vancouver_trees, aes(latitude, longitude)) +
-  geom_point(aes(color = height_range_id), #colour by height range ID
-             size = 0.1,
-             alpha = 0.2) 
+    tree_location <- ggplot(vancouver_trees, aes(latitude, longitude)) +
+      geom_point(aes(color = height_range_id), #colour by height range ID
+                 size = 0.1,
+                 alpha = 0.2) 
 
-print(tree_location)
-```
+    print(tree_location)
 
     ## Warning: Removed 22771 rows containing missing values (`geom_point()`).
 
-![](mini-project-1_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](mini-project-1_files/figure-markdown_strict/unnamed-chunk-8-1.png)
 
-``` r
-location_curb <- ggplot(vancouver_trees, aes(latitude, longitude)) +
-  geom_point(aes(color = curb), #colour by curb, Yes or No
-             size = 0.1,
-             alpha = 0.8) 
+    location_curb <- ggplot(vancouver_trees, aes(latitude, longitude)) +
+      geom_point(aes(color = curb), #colour by curb, Yes or No
+                 size = 0.1,
+                 alpha = 0.8) 
 
-print(location_curb)
-```
+    print(location_curb)
 
     ## Warning: Removed 22771 rows containing missing values (`geom_point()`).
 
-![](mini-project-1_files/figure-markdown_github/unnamed-chunk-8-2.png)
+![](mini-project-1_files/figure-markdown_strict/unnamed-chunk-8-2.png)
 
 ## 1) Distribution between height ID and diameter
 
 *This plot uses a jitter plot to show the distribution of tree diameter
 for each height range ID*
 
-``` r
-height_diam <- ggplot(vancouver_trees, aes(height_range_id, diameter)) +
-    geom_jitter(width = 0.2, alpha = 0.5)
+    height_diam <- ggplot(vancouver_trees, aes(height_range_id, diameter)) +
+        geom_jitter(width = 0.2, alpha = 0.5)
 
-print(height_diam)
-```
+    print(height_diam)
 
-![](mini-project-1_files/figure-markdown_github/unnamed-chunk-9-1.png)
+![](mini-project-1_files/figure-markdown_strict/unnamed-chunk-9-1.png)
 
 <!----------------------------------------------------------------------------->
 
