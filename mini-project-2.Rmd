@@ -134,6 +134,7 @@ reactable(genus_common_freq)
 ```
 
 **Graphing:**
+This helps to quickly see visually which genus are more common in Vancouver
 ```{r}
 genus_barplot <- genus_freq %>%
   rename(count = frequency) %>%
@@ -153,6 +154,17 @@ print(genus_barplot)
 *Is there a relationship between the height of trees and the age of trees? What about the diameter of tree against the age of trees?*
 
 **Summarizing:**
+```{r}
+today = Sys.Date() #gets today's date
+
+vancouver_trees_age <- vancouver_trees %>%
+  mutate(age_yrs = (as.numeric(difftime(today, date_planted, units = "days"))) / 365.25) %>%
+  select(genus_name,common_name,height_range_id,diameter,date_planted,age_yrs) #selects only specific columns
+
+reactable(vancouver_trees_age)
+
+```
+
 
 **Graphing:**
 
