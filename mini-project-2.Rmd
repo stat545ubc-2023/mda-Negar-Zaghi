@@ -60,9 +60,9 @@ First, write out the 4 research questions you defined in milestone 1 were. This 
 <!-------------------------- Start your work below ---------------------------->
 1. *For each genus, what common names of trees are found in Vancouver?*
 
-2. *Is there a relationship between the height of trees and the age of trees? What about the diameter of tree against the age of trees?*
+2. *Is there a relationship between the diameter of trees and the age of trees? Analyze for the most common tree type*
 
-3. *Where are the different type of tree located in Vancouver? Is there a trend between location of tree planted and type of tree?*
+3. *What is the age vs height relationship of the most common tree?*
 
 4. *Is there a relationship between the height of trees and the diameter of trees?*
 <!----------------------------------------------------------------------------->
@@ -151,39 +151,106 @@ print(genus_barplot)
 ```
 
 #### 2) 
-*Is there a relationship between the height of trees and the age of trees? What about the diameter of tree against the age of trees?*
+*Is there a relationship between the diameter of trees and the age of trees? Analyze for the most common tree type*
 
 **Summarizing:**
+Here, we are pulling out the most common tree in Vancouver to analyze age vs diameter data
+
 ```{r}
 today = Sys.Date() #gets today's date
 
 vancouver_trees_age <- vancouver_trees %>%
   mutate(age_yrs = (as.numeric(difftime(today, date_planted, units = "days"))) / 365.25) %>%
-  select(genus_name,common_name,height_range_id,diameter,date_planted,age_yrs) #selects only specific columns
+  #selects only specific columns
+  select(genus_name,common_name,height_range_id,diameter,date_planted,age_yrs) 
 
 reactable(vancouver_trees_age)
 
+#Pulling out the common tree name that has the most number of trees in Vancouver
+max_index <- which.max(genus_common_freq$frequency)
+
+most_common_tree_genus <- genus_common_freq$genus_name[max_index]
+most_common_tree <- genus_common_freq$common_name[max_index]
+most_common_tree_row <- genus_common_freq[max_index, ]
+
+print(most_common_tree_row)
+
+most_common_tree_all <- vancouver_trees_age %>%
+  filter(common_name == most_common_tree)
+
+reactable(most_common_tree_all)
 ```
 
-
 **Graphing:**
+Here, we will plot age vs diameter of Vancouver's most common tree to see the correlation
 
+```{r}
+diam_age_plot <- most_common_tree_all %>%
+  ggplot(aes(age_yrs, diameter)) +
+  geom_point(alpha = 0.3) +
+  theme_classic() +
+  xlab("Age (yrs)") +
+  ylab("Diameter (in)") +
+  coord_cartesian(ylim = c(0,40))
+
+print(diam_age_plot)
+```
 
 #### 3) 
-*Where are the different type of tree located in Vancouver? Is there a trend between location of tree planted and type of tree?*
+*What is the age vs height relationship of the most common tree?*
 
 **Summarizing:**
+```{r}
+mc_tree_height <- most_common_tree_all %>%
+  select(genus_name,common_name,height_range_id,diameter,age_yrs) %>%
+  filter(!is.na(age_yrs))
+
+print(mc_tree_height)
+
+height_mode <- mc_tree_height %>%
+  group_by(height_range_id) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count)) %>%
+  filter(row_number() == 1) %>%
+  pull(height_range_id)
+
+cat("The mode of the hieght range id for the most common tree in Vancouver is:", height_mode)
+```
 
 **Graphing:**
+Using a jitterplot to understand the age of trees for each height ID
+```{r}
+heightID_age_jitterplot <- mc_tree_height %>%
+  ggplot(aes(height_range_id, age_yrs)) +
+  geom_jitter(width = 0.1, alpha = 0.5) 
 
+print(heightID_age_jitterplot)
+```
 
 #### 4) 
 *Is there a relationship between the height of trees and the diameter of trees?*
 
 **Summarizing:**
+Find mean diameter of the most common tree in Vancouver
+```{r}
+mc_tree_height_diam <- mc_tree_height
+
+mean_diam <- mc_tree_height_diam %>%
+  summarise(mean = mean(diameter))
+
+print("The mean diameter for the most common tree in Vancouver is: ")
+print(mean_diam)
+```
 
 **Graphing:**
+Using a jitterplot to understand the diameter of trees for each height ID
+```{r}
+heightID_diam_jitterplot <- mc_tree_height_diam %>%
+  ggplot(aes(height_range_id, diameter)) +
+  geom_jitter(width = 0.1, alpha = 0.5) 
 
+print(heightID_diam_jitterplot)
+```
 
 <!----------------------------------------------------------------------------->
 
@@ -192,7 +259,7 @@ reactable(vancouver_trees_age)
 Based on the operations that you've completed, how much closer are you to answering your research questions? Think about what aspects of your research questions remain unclear. Can your research questions be refined, now that you've investigated your data a bit more? Which research questions are yielding interesting results?
 
 <!------------------------- Write your answer here ---------------------------->
-
+Much closer! It is really interesting to see the two jitter plots relating height ID vs age and height ID vs diameter!
 
 <!----------------------------------------------------------------------------->
 
@@ -211,6 +278,7 @@ A reminder of the definition of *tidy* data:
 Based on the definition above, can you identify if your data is tidy or untidy? Go through all your columns, or if you have \>8 variables, just pick 8, and explain whether the data is untidy or tidy.
 
 <!--------------------------- Start your work below --------------------------->
+Yes it is tidy, for most of the analysis above, I have selected only the columns I am interested in and have also removed all NA values.
 
 <!----------------------------------------------------------------------------->
 
@@ -232,15 +300,16 @@ Now, you should be more familiar with your data, and also have made progress in 
 
 <!-------------------------- Start your work below ---------------------------->
 
-1.  *FILL_THIS_IN*
-2.  *FILL_THIS_IN*
+1.  *Is there a relationship between the diameter of trees and the age of trees? Analyze for the most common tree type*
+
+2.  *What is the age vs height relationship of the most common tree?*
 
 <!----------------------------------------------------------------------------->
 
 Explain your decision for choosing the above two research questions.
 
 <!--------------------------- Start your work below --------------------------->
-
+The plots looked really interesting and I am always interesting to understand how tree age affects height and diameter
 <!----------------------------------------------------------------------------->
 
 Now, try to choose a version of your data that you think will be appropriate to answer these 2 questions. Use between 4 and 8 functions that we've covered so far (i.e. by filtering, cleaning, tidy'ing, dropping irrelevant columns, etc.).
@@ -248,6 +317,22 @@ Now, try to choose a version of your data that you think will be appropriate to 
 (If it makes more sense, then you can make/pick two versions of your data, one for each research question.) 
 
 <!--------------------------- Start your work below --------------------------->
+1.  *Is there a relationship between the diameter of trees and the age of trees? Analyze for the most common tree type*
+
+Most clean data for this: (see above for how this was created)
+```{r}
+mc_tree_diam_age <- mc_tree_height
+print(mc_tree_diam_age)
+```
+
+
+2.  *What is the age vs height relationship of the most common tree?*
+
+Most clean data for this: (see above for how this was created)
+```{r}
+print(mc_tree_height)
+```
+
 
 # Task 3: Modelling
 
@@ -257,9 +342,9 @@ Pick a research question from 1.2, and pick a variable of interest (we'll call i
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Research Question**: FILL_THIS_IN
+**Research Question**: *Is there a relationship between the diameter of trees and the age of trees? Analyze for the most common tree type*
 
-**Variable of interest**: FILL_THIS_IN
+**Variable of interest**: diameter of trees
 
 <!----------------------------------------------------------------------------->
 
@@ -274,6 +359,11 @@ Fit a model or run a hypothesis test that provides insight on this variable with
     -   You could use `lm()` to test for significance of regression coefficients.
 
 <!-------------------------- Start your work below ---------------------------->
+```{r}
+model <- lm(diameter ~ age_yrs, data = mc_tree_diam_age)
+
+summary(model)
+```
 
 <!----------------------------------------------------------------------------->
 
