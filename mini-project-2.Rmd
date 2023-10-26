@@ -2,7 +2,7 @@
 title: "Mini Data Analysis Milestone 2"
 author: Negar Zaghi
 date: October 25, 2023
-output: html_document
+output: github_document
 
 ---
 
@@ -48,7 +48,6 @@ Begin by loading your data and the tidyverse package below:
 ```{r, message = FALSE}
 library(datateachr) # <- might contain the data you picked!
 library(tidyverse)
-library(reactable)
 library(ggplot2)
 ```
 
@@ -127,13 +126,13 @@ genus <- van_trees_fct %>%
 genus_freq <- genus %>%
   mutate(genus_name = fct_infreq(genus_name))
 
-reactable(genus_freq)
+print(genus_freq)
 
 genus_common_freq <- van_trees_fct %>%
   group_by(genus_name, common_name) %>%
   summarise(frequency = n()) 
 
-reactable(genus_common_freq)
+print(genus_common_freq)
 ```
 
 **Graphing:**
@@ -167,7 +166,7 @@ vancouver_trees_age <- vancouver_trees %>%
   #selects only specific columns
   select(genus_name,common_name,height_range_id,diameter,date_planted,age_yrs) 
 
-reactable(vancouver_trees_age)
+print(vancouver_trees_age)
 
 #Pulling out the common tree name that has the most number of trees in Vancouver
 max_index <- which.max(genus_common_freq$frequency)
@@ -181,7 +180,7 @@ print(most_common_tree_row)
 most_common_tree_all <- vancouver_trees_age %>%
   filter(common_name == most_common_tree)
 
-reactable(most_common_tree_all)
+print(most_common_tree_all)
 ```
 
 **Graphing:**
