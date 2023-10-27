@@ -2,7 +2,7 @@
 title: "Mini Data Analysis Milestone 2"
 author: Negar Zaghi
 date: October 25, 2023
-output: github_document
+output: html_document
 
 ---
 
@@ -49,6 +49,7 @@ Begin by loading your data and the tidyverse package below:
 library(datateachr) # <- might contain the data you picked!
 library(tidyverse)
 library(ggplot2)
+library(broom)
 ```
 
 # Task 1: Process and summarize your data 
@@ -293,6 +294,30 @@ If your data is untidy, then tidy it! Then, untidy it back to it's original stat
 Be sure to explain your reasoning for this task. Show us the "before" and "after".
 
 <!--------------------------- Start your work below --------------------------->
+**This is how I tidied my data previously, now adding a bit more tidy elements like removing more unnecessary columns and removing NA age_yrs values:**
+
+```{r}
+vancouver_trees_age_tidy <- vancouver_trees %>%
+  mutate(age_yrs = (as.numeric(difftime(today, date_planted, units = "days"))) / 365.25) %>% #create age column
+  select(genus_name,common_name,height_range_id,diameter,age_yrs) %>% #selects only specific columns
+  filter(!is.na(age_yrs)) #remove age_yrs values that have no values.
+```
+
+*BEFORE ----> The Untidy Data Set below contains more columns than needed for analysis, has no "age" column that I need AND includes unnecessary NA values for some rows*
+```{r}
+print(vancouver_trees)
+```
+
+*AFTER ----> The Tidy Data Set has a new column called "age_yrs", only the columns needed for analysis (genus name, common name, height ID, diameter and age) and removes the NA values for the age_yrs column*
+```{r}
+print(vancouver_trees_age_tidy)
+```
+
+*Untidying the tidy data set by setting it equal to the original untidy one*
+```{r}
+vancouver_trees_age_untidy <- vancouver_trees
+print(vancouver_trees_age_untidy)
+```
 
 <!----------------------------------------------------------------------------->
 
@@ -321,20 +346,41 @@ Now, try to choose a version of your data that you think will be appropriate to 
 <!--------------------------- Start your work below --------------------------->
 1.  *Is there a relationship between the diameter of trees and the age of trees? Analyze for the most common tree type*
 
-Most clean data for this: (see above for how this was created)
+Most clean data for this was created in the analysis in section 1 *see section 1.2 for more details, below is the code rewritten:*
+
 ```{r}
-mc_tree_diam_age <- mc_tree_height
+van_trees_fct <- vancouver_trees %>%
+  mutate(genus_name = factor(genus_name),
+         common_name = factor(common_name))
+
+genus_common_freq <- van_trees_fct %>%
+  group_by(genus_name, common_name) %>%
+  summarise(frequency = n()) 
+
+max_index <- which.max(genus_common_freq$frequency)
+
+most_common_tree <- genus_common_freq$common_name[max_index]
+
+most_common_tree_all <- vancouver_trees_age %>%
+  filter(common_name == most_common_tree)
+
+mc_tree_height <- most_common_tree_all %>%
+  select(genus_name,common_name,height_range_id,diameter,age_yrs) %>%
+  filter(!is.na(age_yrs))
+
+mc_tree_diam_age <- mc_tree_height %>%
+  select(genus_name,common_name,diameter,age_yrs) #removed only the height_range_id
+
 print(mc_tree_diam_age)
 ```
 
 
 2.  *What is the age vs height relationship of the most common tree?*
 
-Most clean data for this: (see above for how this was created)
+This data set is similar to the one for the previous questions just focusing on a different column for analysis, see just above for details in the code:
 ```{r}
 print(mc_tree_height)
 ```
-
 
 # Task 3: Modelling
 
@@ -361,9 +407,9 @@ Fit a model or run a hypothesis test that provides insight on this variable with
     -   You could use `lm()` to test for significance of regression coefficients.
 
 <!-------------------------- Start your work below ---------------------------->
+*Fitting a linear model to this data:*
 ```{r}
 model <- lm(diameter ~ age_yrs, data = mc_tree_diam_age)
-
 summary(model)
 ```
 
@@ -378,7 +424,10 @@ Produce something relevant from your fitted model: either predictions on Y, or a
 -   Obtain your results using the `broom` package if possible. If your model is not compatible with the broom function you're needing, then you can obtain your results by some other means, but first indicate which broom function is not compatible.
 
 <!-------------------------- Start your work below ---------------------------->
-
+*Getting the R Squared value for this fit:*
+```{r}
+glance(model)
+```
 <!----------------------------------------------------------------------------->
 
 # Task 4: Reading and writing data
