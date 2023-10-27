@@ -2,7 +2,7 @@
 title: "Mini Data Analysis Milestone 2"
 author: Negar Zaghi
 date: October 25, 2023
-output: html_document
+output: github_document
 
 ---
 

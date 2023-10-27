@@ -72,6 +72,7 @@ Begin by loading your data and the tidyverse package below:
 library(datateachr) # <- might contain the data you picked!
 library(tidyverse)
 library(ggplot2)
+library(broom)
 ```
 
 # Task 1: Process and summarize your data
@@ -514,6 +515,97 @@ Be sure to explain your reasoning for this task. Show us the “before”
 and “after”.
 
 <!--------------------------- Start your work below --------------------------->
+
+**This is how I tidied my data previously, now adding a bit more tidy
+elements like removing more unnecessary columns and removing NA age_yrs
+values:**
+
+``` r
+vancouver_trees_age_tidy <- vancouver_trees %>%
+  mutate(age_yrs = (as.numeric(difftime(today, date_planted, units = "days"))) / 365.25) %>% #create age column
+  select(genus_name,common_name,height_range_id,diameter,age_yrs) %>% #selects only specific columns
+  filter(!is.na(age_yrs)) #remove age_yrs values that have no values.
+```
+
+*BEFORE —-\> The Untidy Data Set below contains more columns than needed
+for analysis, has no “age” column that I need AND includes unnecessary
+NA values for some rows*
+
+``` r
+print(vancouver_trees)
+```
+
+    ## # A tibble: 146,611 × 20
+    ##    tree_id civic_number std_street    genus_name species_name cultivar_name  
+    ##      <dbl>        <dbl> <chr>         <chr>      <chr>        <chr>          
+    ##  1  149556          494 W 58TH AV     ULMUS      AMERICANA    BRANDON        
+    ##  2  149563          450 W 58TH AV     ZELKOVA    SERRATA      <NA>           
+    ##  3  149579         4994 WINDSOR ST    STYRAX     JAPONICA     <NA>           
+    ##  4  149590          858 E 39TH AV     FRAXINUS   AMERICANA    AUTUMN APPLAUSE
+    ##  5  149604         5032 WINDSOR ST    ACER       CAMPESTRE    <NA>           
+    ##  6  149616          585 W 61ST AV     PYRUS      CALLERYANA   CHANTICLEER    
+    ##  7  149617         4909 SHERBROOKE ST ACER       PLATANOIDES  COLUMNARE      
+    ##  8  149618         4925 SHERBROOKE ST ACER       PLATANOIDES  COLUMNARE      
+    ##  9  149619         4969 SHERBROOKE ST ACER       PLATANOIDES  COLUMNARE      
+    ## 10  149625          720 E 39TH AV     FRAXINUS   AMERICANA    AUTUMN APPLAUSE
+    ## # ℹ 146,601 more rows
+    ## # ℹ 14 more variables: common_name <chr>, assigned <chr>, root_barrier <chr>,
+    ## #   plant_area <chr>, on_street_block <dbl>, on_street <chr>,
+    ## #   neighbourhood_name <chr>, street_side_name <chr>, height_range_id <dbl>,
+    ## #   diameter <dbl>, curb <chr>, date_planted <date>, longitude <dbl>,
+    ## #   latitude <dbl>
+
+*AFTER —-\> The Tidy Data Set has a new column called “age_yrs”, only
+the columns needed for analysis (genus name, common name, height ID,
+diameter and age) and removes the NA values for the age_yrs column*
+
+``` r
+print(vancouver_trees_age_tidy)
+```
+
+    ## # A tibble: 70,063 × 5
+    ##    genus_name common_name           height_range_id diameter age_yrs
+    ##    <chr>      <chr>                           <dbl>    <dbl>   <dbl>
+    ##  1 ULMUS      BRANDON ELM                         2    10       24.8
+    ##  2 ZELKOVA    JAPANESE ZELKOVA                    4    10       27.4
+    ##  3 STYRAX     JAPANESE SNOWBELL                   3     4       29.9
+    ##  4 FRAXINUS   AUTUMN APPLAUSE ASH                 4    18       27.5
+    ##  5 ACER       HEDGE MAPLE                         2     9       29.9
+    ##  6 ACER       COLUMNAR NORWAY MAPLE               3    15       29.9
+    ##  7 ACER       COLUMNAR NORWAY MAPLE               3    14       29.9
+    ##  8 ACER       COLUMNAR NORWAY MAPLE               2    16       29.9
+    ##  9 FRAXINUS   AUTUMN APPLAUSE ASH                 2     7.5     29.9
+    ## 10 TILIA      CRIMEAN LINDEN                      2     7.75    29.9
+    ## # ℹ 70,053 more rows
+
+*Untidying the tidy data set by setting it equal to the original untidy
+one*
+
+``` r
+vancouver_trees_age_untidy <- vancouver_trees
+print(vancouver_trees_age_untidy)
+```
+
+    ## # A tibble: 146,611 × 20
+    ##    tree_id civic_number std_street    genus_name species_name cultivar_name  
+    ##      <dbl>        <dbl> <chr>         <chr>      <chr>        <chr>          
+    ##  1  149556          494 W 58TH AV     ULMUS      AMERICANA    BRANDON        
+    ##  2  149563          450 W 58TH AV     ZELKOVA    SERRATA      <NA>           
+    ##  3  149579         4994 WINDSOR ST    STYRAX     JAPONICA     <NA>           
+    ##  4  149590          858 E 39TH AV     FRAXINUS   AMERICANA    AUTUMN APPLAUSE
+    ##  5  149604         5032 WINDSOR ST    ACER       CAMPESTRE    <NA>           
+    ##  6  149616          585 W 61ST AV     PYRUS      CALLERYANA   CHANTICLEER    
+    ##  7  149617         4909 SHERBROOKE ST ACER       PLATANOIDES  COLUMNARE      
+    ##  8  149618         4925 SHERBROOKE ST ACER       PLATANOIDES  COLUMNARE      
+    ##  9  149619         4969 SHERBROOKE ST ACER       PLATANOIDES  COLUMNARE      
+    ## 10  149625          720 E 39TH AV     FRAXINUS   AMERICANA    AUTUMN APPLAUSE
+    ## # ℹ 146,601 more rows
+    ## # ℹ 14 more variables: common_name <chr>, assigned <chr>, root_barrier <chr>,
+    ## #   plant_area <chr>, on_street_block <dbl>, on_street <chr>,
+    ## #   neighbourhood_name <chr>, street_side_name <chr>, height_range_id <dbl>,
+    ## #   diameter <dbl>, curb <chr>, date_planted <date>, longitude <dbl>,
+    ## #   latitude <dbl>
+
 <!----------------------------------------------------------------------------->
 
 ### 2.3 (4 points)
@@ -553,31 +645,60 @@ data, one for each research question.)
 1.  *Is there a relationship between the diameter of trees and the age
     of trees? Analyze for the most common tree type*
 
-Most clean data for this: (see above for how this was created)
+Most clean data for this was created in the analysis in section 1 *see
+section 1.2 for more details, below is the code rewritten:*
 
 ``` r
-mc_tree_diam_age <- mc_tree_height
+van_trees_fct <- vancouver_trees %>%
+  mutate(genus_name = factor(genus_name),
+         common_name = factor(common_name))
+
+genus_common_freq <- van_trees_fct %>%
+  group_by(genus_name, common_name) %>%
+  summarise(frequency = n()) 
+```
+
+    ## `summarise()` has grouped output by 'genus_name'. You can override using the
+    ## `.groups` argument.
+
+``` r
+max_index <- which.max(genus_common_freq$frequency)
+
+most_common_tree <- genus_common_freq$common_name[max_index]
+
+most_common_tree_all <- vancouver_trees_age %>%
+  filter(common_name == most_common_tree)
+
+mc_tree_height <- most_common_tree_all %>%
+  select(genus_name,common_name,height_range_id,diameter,age_yrs) %>%
+  filter(!is.na(age_yrs))
+
+mc_tree_diam_age <- mc_tree_height %>%
+  select(genus_name,common_name,diameter,age_yrs) #removed only the height_range_id
+
 print(mc_tree_diam_age)
 ```
 
-    ## # A tibble: 1,549 × 5
-    ##    genus_name common_name              height_range_id diameter age_yrs
-    ##    <chr>      <chr>                              <dbl>    <dbl>   <dbl>
-    ##  1 PRUNUS     KWANZAN FLOWERING CHERRY               2     6.5     26.9
-    ##  2 PRUNUS     KWANZAN FLOWERING CHERRY               2     3       28.5
-    ##  3 PRUNUS     KWANZAN FLOWERING CHERRY               1     3       11.6
-    ##  4 PRUNUS     KWANZAN FLOWERING CHERRY               1     4.75    11.0
-    ##  5 PRUNUS     KWANZAN FLOWERING CHERRY               1     7.75    10.0
-    ##  6 PRUNUS     KWANZAN FLOWERING CHERRY               2     6       26.9
-    ##  7 PRUNUS     KWANZAN FLOWERING CHERRY               2     8.5     24.5
-    ##  8 PRUNUS     KWANZAN FLOWERING CHERRY               2     5.5     26.9
-    ##  9 PRUNUS     KWANZAN FLOWERING CHERRY               1     5.25    17.8
-    ## 10 PRUNUS     KWANZAN FLOWERING CHERRY               1     5       16.8
+    ## # A tibble: 1,549 × 4
+    ##    genus_name common_name              diameter age_yrs
+    ##    <chr>      <chr>                       <dbl>   <dbl>
+    ##  1 PRUNUS     KWANZAN FLOWERING CHERRY     6.5     26.9
+    ##  2 PRUNUS     KWANZAN FLOWERING CHERRY     3       28.5
+    ##  3 PRUNUS     KWANZAN FLOWERING CHERRY     3       11.6
+    ##  4 PRUNUS     KWANZAN FLOWERING CHERRY     4.75    11.0
+    ##  5 PRUNUS     KWANZAN FLOWERING CHERRY     7.75    10.0
+    ##  6 PRUNUS     KWANZAN FLOWERING CHERRY     6       26.9
+    ##  7 PRUNUS     KWANZAN FLOWERING CHERRY     8.5     24.5
+    ##  8 PRUNUS     KWANZAN FLOWERING CHERRY     5.5     26.9
+    ##  9 PRUNUS     KWANZAN FLOWERING CHERRY     5.25    17.8
+    ## 10 PRUNUS     KWANZAN FLOWERING CHERRY     5       16.8
     ## # ℹ 1,539 more rows
 
 2.  *What is the age vs height relationship of the most common tree?*
 
-Most clean data for this: (see above for how this was created)
+This data set is similar to the one for the previous questions just
+focusing on a different column for analysis, see just above for details
+in the code:
 
 ``` r
 print(mc_tree_height)
@@ -637,9 +758,10 @@ specifics in STAT 545.
 
 <!-------------------------- Start your work below ---------------------------->
 
+*Fitting a linear model to this data:*
+
 ``` r
 model <- lm(diameter ~ age_yrs, data = mc_tree_diam_age)
-
 summary(model)
 ```
 
@@ -653,8 +775,8 @@ summary(model)
     ## 
     ## Coefficients:
     ##             Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept) -0.70544    0.22177  -3.181   0.0015 ** 
-    ## age_yrs      0.41139    0.01055  39.013   <2e-16 ***
+    ## (Intercept) -0.70769    0.22183   -3.19  0.00145 ** 
+    ## age_yrs      0.41139    0.01055   39.01  < 2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -679,6 +801,19 @@ Y, or a single value like a regression coefficient or a p-value.
   which broom function is not compatible.
 
 <!-------------------------- Start your work below ---------------------------->
+
+*Getting the R Squared value for this fit:*
+
+``` r
+glance(model)
+```
+
+    ## # A tibble: 1 × 12
+    ##   r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
+    ##       <dbl>         <dbl> <dbl>     <dbl>     <dbl> <dbl>  <dbl> <dbl> <dbl>
+    ## 1     0.496         0.496  4.05     1522. 2.18e-232     1 -4363. 8731. 8747.
+    ## # ℹ 3 more variables: deviance <dbl>, df.residual <int>, nobs <int>
+
 <!----------------------------------------------------------------------------->
 
 # Task 4: Reading and writing data
