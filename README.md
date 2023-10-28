@@ -10,8 +10,8 @@ This is a .Rmd file that completes the requirements of the data analysis require
 
 _mini-project-1.md_
 
-This is a .md file that will show all of the project part 1 including tables and graphs in Markdown format
+This is a .md file that shows all of the project part 1 including tables and graphs in Markdown format
 
 _mini-project-2.md_
 
-This is a .md file that will show all of the project part 2 including tables and graphs in Markdown format
+This is a .md file that shows all of the project part 2 including tables and graphs in Markdown format
