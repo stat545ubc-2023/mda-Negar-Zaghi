@@ -2,8 +2,7 @@
 title: "Mini Data Analysis Milestone 2"
 author: Negar Zaghi
 date: October 25, 2023
-output: github_document
-
+output: html_document
 ---
 
 *To complete this milestone, you can either edit [this `.rmd` file](https://raw.githubusercontent.com/UBC-STAT/stat545.stat.ubc.ca/master/content/mini-project/mini-project-2.Rmd) directly. Fill in the sections that are commented out with `<!--- start your work here--->`. When you are done, make sure to knit to an `.md` file by changing the output in the YAML header to `github_document`, before submitting a tagged release on canvas.*
@@ -50,6 +49,7 @@ library(datateachr) # <- might contain the data you picked!
 library(tidyverse)
 library(ggplot2)
 library(broom)
+library(here)
 ```
 
 # Task 1: Process and summarize your data 
@@ -101,7 +101,7 @@ Make sure it's clear what research question you are doing each operation for!
 
 <!------------------------- Start your work below ----------------------------->
 
-#### 1) 
+#### **1)** 
 *For each genus, what common names of trees are found in Vancouver?*
 
 **Summarizing:**
@@ -153,7 +153,7 @@ genus_barplot <- genus_freq %>%
 print(genus_barplot)
 ```
 
-#### 2) 
+#### **2)** 
 *Is there a relationship between the diameter of trees and the age of trees? Analyze for the most common tree type*
 
 **Summarizing:**
@@ -199,7 +199,7 @@ diam_age_plot <- most_common_tree_all %>%
 print(diam_age_plot)
 ```
 
-#### 3) 
+#### **3)**
 *What is the age vs height relationship of the most common tree?*
 
 **Summarizing:**
@@ -230,7 +230,7 @@ heightID_age_jitterplot <- mc_tree_height %>%
 print(heightID_age_jitterplot)
 ```
 
-#### 4) 
+#### **4)** 
 *Is there a relationship between the height of trees and the diameter of trees?*
 
 **Summarizing:**
@@ -281,7 +281,7 @@ A reminder of the definition of *tidy* data:
 Based on the definition above, can you identify if your data is tidy or untidy? Go through all your columns, or if you have \>8 variables, just pick 8, and explain whether the data is untidy or tidy.
 
 <!--------------------------- Start your work below --------------------------->
-Yes it is tidy, for most of the analysis above, I have selected only the columns I am interested in and have also removed all NA values.
+The original data is not tidy but I have made it tidy for most of the analysis above. I selected only the columns I am interested in and have also removed all NA values.
 
 <!----------------------------------------------------------------------------->
 
@@ -336,7 +336,9 @@ Now, you should be more familiar with your data, and also have made progress in 
 Explain your decision for choosing the above two research questions.
 
 <!--------------------------- Start your work below --------------------------->
-The plots looked really interesting and I am always interesting to understand how tree age affects height and diameter
+
+*The plots looked really interesting and I am always interesting to understand how tree age affects height and diameter*
+
 <!----------------------------------------------------------------------------->
 
 Now, try to choose a version of your data that you think will be appropriate to answer these 2 questions. Use between 4 and 8 functions that we've covered so far (i.e. by filtering, cleaning, tidy'ing, dropping irrelevant columns, etc.).
@@ -426,7 +428,9 @@ Produce something relevant from your fitted model: either predictions on Y, or a
 <!-------------------------- Start your work below ---------------------------->
 *Getting the R Squared value for this fit:*
 ```{r}
-glance(model)
+model_summary <- glance(model)
+r_squared <- model_summary$r.squared
+cat("R-squared:", r_squared)
 ```
 <!----------------------------------------------------------------------------->
 
@@ -442,7 +446,9 @@ Take a summary table that you made from Task 1, and write it as a csv file in yo
 -   **Reproducibility criteria**: You should be able to delete the csv file, and remake it simply by knitting this Rmd file.
 
 <!-------------------------- Start your work below ---------------------------->
-
+```{r}
+write_delim(mc_tree_height, here("Output", "mc_tree_height.csv"))
+```
 <!----------------------------------------------------------------------------->
 
 ## 4.2 (3 points)
@@ -452,7 +458,12 @@ Write your model object from Task 3 to an R binary file (an RDS), and load it ag
 -   The same robustness and reproducibility criteria as in 4.1 apply here.
 
 <!-------------------------- Start your work below ---------------------------->
+```{r}
+saveRDS(model, file = here("Output", "model.rds"))
 
+model_again <- readRDS(here("Output", "model.rds"))
+print(model_again)
+```
 <!----------------------------------------------------------------------------->
 
 # Overall Reproducibility/Cleanliness/Coherence Checklist 
