@@ -73,6 +73,7 @@ library(datateachr) # <- might contain the data you picked!
 library(tidyverse)
 library(ggplot2)
 library(broom)
+library(here)
 ```
 
 # Task 1: Process and summarize your data
@@ -154,7 +155,7 @@ for!
 
 <!------------------------- Start your work below ----------------------------->
 
-#### 1)
+#### **1)**
 
 *For each genus, what common names of trees are found in Vancouver?*
 
@@ -275,7 +276,7 @@ print(genus_barplot)
 
 ![](mini-project-2_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
-#### 2)
+#### **2)**
 
 *Is there a relationship between the diameter of trees and the age of
 trees? Analyze for the most common tree type*
@@ -367,7 +368,7 @@ print(diam_age_plot)
 
 ![](mini-project-2_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
-#### 3)
+#### **3)**
 
 *What is the age vs height relationship of the most common tree?*
 
@@ -422,7 +423,7 @@ print(heightID_age_jitterplot)
 
 ![](mini-project-2_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
-#### 4)
+#### **4)**
 
 *Is there a relationship between the height of trees and the diameter of
 trees?*
@@ -498,8 +499,9 @@ pick 8, and explain whether the data is untidy or tidy.
 
 <!--------------------------- Start your work below --------------------------->
 
-Yes it is tidy, for most of the analysis above, I have selected only the
-columns I am interested in and have also removed all NA values.
+The original data is not tidy but I have made it tidy for most of the
+analysis above. I selected only the columns I am interested in and have
+also removed all NA values.
 
 <!----------------------------------------------------------------------------->
 
@@ -628,8 +630,9 @@ Explain your decision for choosing the above two research questions.
 
 <!--------------------------- Start your work below --------------------------->
 
-The plots looked really interesting and I am always interesting to
-understand how tree age affects height and diameter
+*The plots looked really interesting and I am always interesting to
+understand how tree age affects height and diameter*
+
 <!----------------------------------------------------------------------------->
 
 Now, try to choose a version of your data that you think will be
@@ -805,14 +808,12 @@ Y, or a single value like a regression coefficient or a p-value.
 *Getting the R Squared value for this fit:*
 
 ``` r
-glance(model)
+model_summary <- glance(model)
+r_squared <- model_summary$r.squared
+cat("R-squared:", r_squared)
 ```
 
-    ## # A tibble: 1 × 12
-    ##   r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
-    ##       <dbl>         <dbl> <dbl>     <dbl>     <dbl> <dbl>  <dbl> <dbl> <dbl>
-    ## 1     0.496         0.496  4.05     1522. 2.18e-232     1 -4363. 8731. 8747.
-    ## # ℹ 3 more variables: deviance <dbl>, df.residual <int>, nobs <int>
+    ## R-squared: 0.4959252
 
 <!----------------------------------------------------------------------------->
 
@@ -835,6 +836,11 @@ file in your `output` folder. Use the `here::here()` function.
   file, and remake it simply by knitting this Rmd file.
 
 <!-------------------------- Start your work below ---------------------------->
+
+``` r
+write_delim(mc_tree_height, here("Output", "mc_tree_height.csv"))
+```
+
 <!----------------------------------------------------------------------------->
 
 ## 4.2 (3 points)
@@ -846,6 +852,22 @@ Use the functions `saveRDS()` and `readRDS()`.
 - The same robustness and reproducibility criteria as in 4.1 apply here.
 
 <!-------------------------- Start your work below ---------------------------->
+
+``` r
+saveRDS(model, file = here("Output", "model.rds"))
+
+model_again <- readRDS(here("Output", "model.rds"))
+print(model_again)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = diameter ~ age_yrs, data = mc_tree_diam_age)
+    ## 
+    ## Coefficients:
+    ## (Intercept)      age_yrs  
+    ##     -0.7077       0.4114
+
 <!----------------------------------------------------------------------------->
 
 # Overall Reproducibility/Cleanliness/Coherence Checklist
